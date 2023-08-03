@@ -1,0 +1,26 @@
+{
+  "name": "nest-generate",
+  "version": "1.0.0",
+  "description": "NestJS templated generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/hellpain1412/nest-generate.git"
+  },
+  "keywords": [
+    "nestjs",
+    "generator"
+  ],
+  "author": "hellpain1412",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hellpain1412/nest-generate/issues"
+  },
+  "homepage": "https://github.com/hellpain1412/nest-generate#readme",
+  "directories": {
+    "lib": "lib"
+  }
+}

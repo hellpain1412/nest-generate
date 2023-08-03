@@ -1,0 +1,73 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { REFERRER_MODEL, USER_MODEL } from '../../../common/closureCreator';
+
+const OTP_MODEL = 'otps';
+
+export type OtpDocument = HydratedDocument<Otp>;
+@Schema({ timestamps: true, collection: OTP_MODEL })
+export class Otp {
+  @Prop({
+    required: true,
+    trim: true,
+  })
+  otpCode: string;
+
+  @Prop({
+    required: false,
+    trim: true,
+    index: { unique: true },
+  })
+  email: string;
+
+  @Prop()
+  expireAt: Date;
+
+  @Prop()
+  createdAt?: Date;
+
+  @Prop()
+  updatedAt?: Date;
+}
+
+export const OtpSchema = SchemaFactory.createForClass(Otp);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<% if (modelBaseClass) { %>import { <%= modelBaseClass %> } from '<%= modelBaseDir %><%= modelBaseClass %>';<% } -%>
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity('<%= modelClassLower %>')
+export class <%= modelClass %> <% if (modelBaseClass) { %>extends <%= modelBaseClass %> <% } %>{
+<% if (modelBaseClass) { %>
+    constructor() {
+        super();
+    }
+<% } -%>
+<% if (!Object.values(modelProps).includes('primary')) { %>
+    @PrimaryGeneratedColumn()
+    id: number;
+<% } -%>
+<% Object.keys(modelProps).forEach(function(prop) { %>
+<% if (modelProps[prop] == 'primary') { %>
+    @PrimaryGeneratedColumn()
+    <%= prop %>: number;
+<% } else { -%>
+    @Column()
+    <%= prop %>: <%= modelProps[prop] %>;
+<% } -%>
+<% }) %>
+}

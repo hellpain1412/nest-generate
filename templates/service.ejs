@@ -1,0 +1,36 @@
+import { Injectable, UnauthorizedException, Request } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+<% if (repository) { %>import { <%= nameUpper %>Repository } from './<%= repositoryFileName %>';<% } %>
+<% if (model || repository || crud) { %>import { <%= modelClass %> } from './<%= modelDir %><%= modelFileName %>';<% } %>
+
+@Injectable()
+export class <%= nameUpper %>Service {
+
+    public constructor(<% if (repository || crud) { %>@InjectRepository(<%= repositoryName %>) private <%= name  %>Repository: <%= repositoryName %><% } %>) {
+    }
+
+<% if (crud) { -%>
+    public async getById(id: number): Promise<<%= modelClass %>> {
+        return await this.<%= name %>Repository.findOne({ id });
+    }
+
+    public create(@Request() req, <%= modelClassLower %>: <%= modelClass %>): Promise<<%= modelClass %>> {
+        <% if (repository || crud) { %><%= modelClassLower %> = this.<%= name %>Repository.create(<%= modelClassLower %>);
+        return this.<%= name %>Repository.save(<%= modelClassLower %>);<% } %>
+    }
+
+    public async update(@Request() req, <%= modelClassLower %>: <%= modelClass %>): Promise<<%= modelClass %>> {
+        <% if (repository || crud) { %>return this.<%= name %>Repository.save(<%= modelClassLower %>);<% } %>
+    }
+
+    public async remove(@Request() req, id: number) {
+        let <%= modelClassLower %> = await this.<%= name %>Repository.findOne({ id });
+        await this.<%= name %>Repository.delete(id);
+        return <%= modelClassLower %>;
+    }
+
+    public async search(@Request() req): Promise<Array<<%= modelClass %>>> {
+        <% if (repository || crud) { %>return await this.<%= name %>Repository.find({<% if (auth) { %>where: { user: req.principal }<% } %>});<% } %>
+    }
+<% } %>
+}
