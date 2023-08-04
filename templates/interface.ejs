@@ -1,0 +1,11 @@
+<% if (old) { -%>
+import { Document } from 'mongoose';
+
+export interface I<%= interfaceClass %> {
+  name: string;
+  age: number;
+  isDeleted?: boolean;
+}
+
+export type <%= interfaceClass %>Document = Document & I<%= interfaceClass %>;
+<% } %>

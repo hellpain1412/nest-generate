@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, Request } from '@nestjs/common';
+<!-- import { Injectable, UnauthorizedException, Request } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 <% if (repository) { %>import { <%= nameUpper %>Repository } from './<%= repositoryFileName %>';<% } %>
 <% if (model || repository || crud) { %>import { <%= modelClass %> } from './<%= modelDir %><%= modelFileName %>';<% } %>
@@ -33,4 +33,4 @@ export class <%= nameUpper %>Service {
         <% if (repository || crud) { %>return await this.<%= name %>Repository.find({<% if (auth) { %>where: { user: req.principal }<% } %>});<% } %>
     }
 <% } %>
-}
+} -->

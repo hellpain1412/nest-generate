@@ -1,4 +1,4 @@
-import { Controller, Request, Param, Body, Get, Post, Put, Delete, ParseUUIDPipe<% if (auth) { %>, UseGuards<% } %> } from "@nestjs/common";
+<!-- import { Controller, Request, Param, Body, Get, Post, Put, Delete, ParseUUIDPipe<% if (auth) { %>, UseGuards<% } %> } from "@nestjs/common";
 <% if (service) { %>import { <%= nameUpper %>Service } from './<%= serviceFileName %>';
 <% } else { -%>
 <% if (repository) { %>import { <%= nameUpper %>Repository } from './<%= repositoryFileName %>';
@@ -72,4 +72,4 @@ export class <%= nameUpper %>Controller {
         <% } else if (repository || crud) { %>return await this.<%= name %>Repository.find({<% if (auth) { %>where: { user: req.principal }<% } %>});<% } %>
     }<% } %>
 
-}
+} -->

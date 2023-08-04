@@ -1,27 +1,21 @@
+<% if (!old) { -%>
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
-import { REFERRER_MODEL, USER_MODEL } from '../../../common/closureCreator';
+import { HydratedDocument } from 'mongoose';
 
-const OTP_MODEL = 'otps';
+const <%= schemaClassUpperCase %>_MODEL = '<%= schemaClassLower %>s';
 
-export type OtpDocument = HydratedDocument<Otp>;
-@Schema({ timestamps: true, collection: OTP_MODEL })
-export class Otp {
+export type <%= schemaClass %>Document = HydratedDocument<<%= schemaClass %>>;
+
+@Schema({ timestamps: true, collection: <%= schemaClassUpperCase %>_MODEL })
+export class <%= schemaClass %> {
   @Prop({
     required: true,
     trim: true,
   })
-  otpCode: string;
+  <%= schemaClassLower %>: string;
 
-  @Prop({
-    required: false,
-    trim: true,
-    index: { unique: true },
-  })
-  email: string;
-
-  @Prop()
-  expireAt: Date;
+  @Prop({ default: null })
+  deleteAt: Date;
 
   @Prop()
   createdAt?: Date;
@@ -30,44 +24,26 @@ export class Otp {
   updatedAt?: Date;
 }
 
-export const OtpSchema = SchemaFactory.createForClass(Otp);
+export const <%= schemaClass %>Schema = SchemaFactory.createForClass(<%= schemaClass %>);
+<% } %><% if (old) { -%>
+import * as mongoose from 'mongoose';
 
+const <%= schemaClassUpperCase %>_MODEL = '<%= schemaClassLower %>s';
 
+const <%= schemaClass %>Schema = new mongoose.Schema(
+  {
+    name: String,
+    age: Number,
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+    collection: <%= schemaClassUpperCase %>_MODEL,
+  },
+);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-<% if (modelBaseClass) { %>import { <%= modelBaseClass %> } from '<%= modelBaseDir %><%= modelBaseClass %>';<% } -%>
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-
-@Entity('<%= modelClassLower %>')
-export class <%= modelClass %> <% if (modelBaseClass) { %>extends <%= modelBaseClass %> <% } %>{
-<% if (modelBaseClass) { %>
-    constructor() {
-        super();
-    }
-<% } -%>
-<% if (!Object.values(modelProps).includes('primary')) { %>
-    @PrimaryGeneratedColumn()
-    id: number;
-<% } -%>
-<% Object.keys(modelProps).forEach(function(prop) { %>
-<% if (modelProps[prop] == 'primary') { %>
-    @PrimaryGeneratedColumn()
-    <%= prop %>: number;
-<% } else { -%>
-    @Column()
-    <%= prop %>: <%= modelProps[prop] %>;
-<% } -%>
-<% }) %>
-}
+export { <%= schemaClassUpperCase %>_MODEL, <%= schemaClass %>Schema };
+<% } %>
