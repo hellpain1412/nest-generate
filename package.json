@@ -22,5 +22,9 @@
   "homepage": "https://github.com/hellpain1412/nest-generate#readme",
   "directories": {
     "lib": "lib"
+  },
+  "dependencies": {
+    "caporal": "^1.4.0",
+    "ejs": "^3.1.9"
   }
 }
