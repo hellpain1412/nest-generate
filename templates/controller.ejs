@@ -73,3 +73,48 @@ export class <%= nameUpper %>Controller {
     }<% } %>
 
 } -->
+
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
+import { <%= nameUpper %>Service } from './<%= name %>.service';
+import { Create<%= nameUpper %>Dto, Update<%= nameUpper %>Dto } from './dto/<%= name %>.dto';
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('<%= nameUpper %>')
+@Controller('<%= name %>')
+export class <%= nameUpper %>Controller {
+  constructor(private readonly <%= name %>Service: <%= nameUpper %>Service) {}
+
+  @Post()
+  create(@Body() create<%= nameUpper %>Dto: Create<%= nameUpper %>Dto) {
+    return this.<%= name %>Service.create(create<%= nameUpper %>Dto);
+  }
+
+  @Get()
+  findAll() {
+    return this.<%= name %>Service.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.<%= name %>Service.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() update<%= nameUpper %>Dto: Update<%= nameUpper %>Dto) {
+    return this.<%= name %>Service.update(+id, update<%= nameUpper %>Dto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.<%= name %>Service.remove(+id);
+  }
+}
+  
