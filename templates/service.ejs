@@ -1,36 +1,41 @@
-<!-- import { Injectable, UnauthorizedException, Request } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-<% if (repository) { %>import { <%= nameUpper %>Repository } from './<%= repositoryFileName %>';<% } %>
-<% if (model || repository || crud) { %>import { <%= modelClass %> } from './<%= modelDir %><%= modelFileName %>';<% } %>
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+<% if (old && schema) { %>
+import { <%= schemaClass %>Document } from './interfaces/<%= name %>.interface';
+import { <%= schemaClassUpperCase %>_MODEL } from './schemas/<%= name %>.schema';<% } else if (!old && schema) { %>
+import { <%= schemaClass %>, <%= schemaClass %>Document } from './schemas/<%= name %>.schema';<% } %>
+<% if (crud) { %>import { Create<%= nameUpper %>Dto, Update<%= nameUpper %>Dto } from './dto/<%= name %>.dto';
+<% } -%>
 
 @Injectable()
 export class <%= nameUpper %>Service {
+  constructor(<% if (old && schema) { %>
+    @InjectModel(<%= schemaClassUpperCase %>_MODEL)
+    private readonly <%= schemaClass %>Model: Model<<%= schemaClass %>Document>,<% } else if (!old && schema) { %>
+    @InjectModel(<%= schemaClass %>.name)
+    private readonly <%= schemaClass %>Model: Model<<%= schemaClass %>Document>,<% } %>
+  ) {}
+<% if (crud) { 
+  %>
+  async create(create<%= nameUpper %>Dto: Create<%= nameUpper %>Dto) {
+    return 'This action adds a new <%= name %>';
+  }
 
-    public constructor(<% if (repository || crud) { %>@InjectRepository(<%= repositoryName %>) private <%= name  %>Repository: <%= repositoryName %><% } %>) {
-    }
+  async findAll() {
+    return `This action returns all <%= name %>`;
+  }
 
-<% if (crud) { -%>
-    public async getById(id: number): Promise<<%= modelClass %>> {
-        return await this.<%= name %>Repository.findOne({ id });
-    }
+  async findOne(id: string) {
+    return `This action returns a #${id} <%= name %>`;
+  }
 
-    public create(@Request() req, <%= modelClassLower %>: <%= modelClass %>): Promise<<%= modelClass %>> {
-        <% if (repository || crud) { %><%= modelClassLower %> = this.<%= name %>Repository.create(<%= modelClassLower %>);
-        return this.<%= name %>Repository.save(<%= modelClassLower %>);<% } %>
-    }
+  async update(id: string, update<%= nameUpper %>Dto: Update<%= nameUpper %>Dto) {
+    return `This action updates a #${id} <%= name %>`;
+  }
 
-    public async update(@Request() req, <%= modelClassLower %>: <%= modelClass %>): Promise<<%= modelClass %>> {
-        <% if (repository || crud) { %>return this.<%= name %>Repository.save(<%= modelClassLower %>);<% } %>
-    }
-
-    public async remove(@Request() req, id: number) {
-        let <%= modelClassLower %> = await this.<%= name %>Repository.findOne({ id });
-        await this.<%= name %>Repository.delete(id);
-        return <%= modelClassLower %>;
-    }
-
-    public async search(@Request() req): Promise<Array<<%= modelClass %>>> {
-        <% if (repository || crud) { %>return await this.<%= name %>Repository.find({<% if (auth) { %>where: { user: req.principal }<% } %>});<% } %>
-    }
-<% } %>
-} -->
+  async remove(id: string) {
+    return `This action removes a #${id} <%= name %>`;
+  }
+<% } -%>
+}

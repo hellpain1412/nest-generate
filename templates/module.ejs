@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 <% if (controller) { %>import { <%= nameUpper %>Controller } from './<%= controllerFileName %>';<% } 
-%><% if (service) { %>import { <%= nameUpper %>Service } from './<%= serviceFileName %>';<% } 
-%>import { <% if (old) { %><%= nameUpperCase %>_MODEL<% } else { %><%= nameUpper %><% } -%>, <%= nameUpper %>Schema } from './schemas/<%= name %>.schema';
+%><% if (service) { %>
+import { <%= nameUpper %>Service } from './<%= serviceFileName %>';<% } 
+%>
+import { <% if (old) { %><%= nameUpperCase %>_MODEL<% } else { %><%= nameUpper %><% } -%>, <%= nameUpper %>Schema } from './schemas/<%= name %>.schema';
 
 @Module({
   imports: [

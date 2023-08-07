@@ -25,14 +25,6 @@ prog
   .option('-m', 'Generate a Module')
   .option('--module', 'Generate a Module')
 
-  .option('-i', 'Generate a Interface')
-  .option('--interface', 'Generate a Interface')
-
-  .option(
-    '--old',
-    'Generate a Schema and interface for the model with old nest version',
-  )
-
   .option('--sch', 'Generate a Schema for the model')
   .option('--schema', 'Generate a Schema for the model')
   .option('--schema-class <name>', 'Specify a custom class name for the schema')
@@ -47,25 +39,27 @@ prog
   .option('-s', 'Generate a Service for the model')
   .option('--service', 'Generate a Service for the model')
 
+  .option('-d', 'Generate dtos for the model')
+  .option('--dto', 'Generate dtos for the model')
+
   // make interface?
   .option('--crud', 'Generates CRUD actions within the Controller and Service')
 
+  .option('-i', 'Generate a Interface')
+  .option('--interface', 'Generate a Interface')
+
+  .option(
+    '--old',
+    'Generate a Schema and interface for the model with old nest version',
+  )
   // add prefix/subdir to generate in
   .option('-p <prefix>', 'Specify root/prefix dir to generate in')
   .option('--prefix <prefix>', 'Specify root/prefix dir to generate in')
 
   // add authentication guards?
   .option(
-    '--auth',
-    'CRUD actions will add authentication guards, requiring a logged in user',
-  )
-  .option(
-    '--auth-guard-class <name>',
-    'Name of a custom @(Guard<name>) class to use',
-  )
-  .option(
-    '--auth-guard-dir <dir>',
-    'The location of the custom @Guard class file',
+    '--auth <name>',
+    'CRUD actions will add authentication guards, requiring a logged in user. Name of a custom @(Guard<name>) class to use',
   )
 
   .option(
@@ -80,31 +74,6 @@ prog
 
   .action((args, o, logger) => {
     console.log(`Running nest-generate v${version} generator...`);
-
-    // first see if there's a configuration file available, and start with that
-    const { configFilePath, config } = _findConfig();
-
-    if (config) {
-      console.log(`Using ${configFilePath} settings...`);
-
-      if (config['prefix'] && !o.prefix) o.prefix = config['prefix'];
-
-      if (config['schemaDir'] && !o.schemaDir)
-        o.schemaDir = config['schemaDir'];
-
-      if (config['interfaceDir'] && !o.interfaceDir)
-        o.interfaceDir = config['interfaceDir'];
-
-      if (config['noSubdir'] && !o.noSubdir) o.noSubdir = config['noSubdir'];
-
-      if (config['casing'] && !o.casing) o.casing = config['casing'];
-
-      if (config['authGuardClass'] && !o.authGuardClass)
-        o.authGuardClass = config['authGuardClass'];
-
-      if (config['authGuardDir'] && !o.authGuardDir)
-        o.authGuardDir = config['authGuardDir'];
-    }
 
     // normalize and validate
     if (o.p) {
@@ -137,7 +106,7 @@ prog
     }
 
     if (o.all) {
-      o.module = o.schema = o.controller = o.service = o.crud = true;
+      o.module = o.schema = o.controller = o.service = o.dto = true;
       if (o.old) {
         o.interface = true;
       }
@@ -148,12 +117,8 @@ prog
     o.nameUpperCase = args.name.toUpperCase();
 
     // set auth guarding params if applicable?
-    if (o.auth) {
-      if (!o.authGuardClass)
-        throw '--auth-guard-class <name> must be specified if using authentication';
-      if (!o.authGuardDir)
-        throw '--auth-guard-dir <dir> must be specified if using authentication';
-    }
+    if (o.auth && typeof o.auth !== 'string')
+      throw 'Auth guard <name> must be specified if using authentication';
 
     // make containing folder for the module, if using, or otherwise the package name
     let outPath = path.resolve(o.prefix ? o.prefix : './src');
@@ -232,6 +197,41 @@ prog
       stagedFiles.push({ type: 'interface', outFile });
     }
 
+    // DTO ?
+    if (o.dto) {
+      if (!o.dtoClass) {
+        o.dtoClass = o.nameUpper;
+        if (o.dtoClass.charAt(o.dtoClass.length - 1) === 's') {
+          o.dtoClass = o.dtoClass.substr(
+            0,
+            o.dtoClass.length - 1,
+          );
+        }
+      }
+
+      o.dtoClassLower = o.dtoClass.toLowerCase();
+      o.dtoClassUpperCase = o.dtoClass.toUpperCase();
+
+      let outPathSchema = outPath;
+      if (o.dtoDir) {
+        outPathSchema += '/' + o.dtoDir;
+        o.dtoDir = _ensureTrailingSlash(o.dtoDir);
+      } else {
+        outPathSchema += '/dto';
+        o.dtoDir = _ensureTrailingSlash('dto');
+      }
+
+      fs.mkdirSync(outPathSchema, { recursive: true });
+
+      o.dtoFileName = _getFileName(
+        o.dtoClass,
+        'dto',
+        o.casing,
+      );
+      let outFile = `${outPathSchema}/${o.dtoFileName}.ts`;
+      stagedFiles.push({ type: 'dto', outFile });
+    }
+
     // MODULE ?
     if (o.module) {
       o.moduleFileName = _getFileName(o.name, 'module', o.casing);
@@ -278,30 +278,4 @@ function _getFileName(className, type, casing) {
 
 function _ensureTrailingSlash(str) {
   return str.charAt(str.length - 1) !== '/' ? str + '/' : str;
-}
-
-// todo: look into parent directories if not found?
-function _findConfig() {
-  let config;
-  let configFilePath;
-
-  function _read(filePath) {
-    if (fs.existsSync(filePath)) {
-      let _config = require(filePath);
-      if (_config['ngen-config']) {
-        configFilePath = filePath;
-        return _config['ngen-config'];
-      }
-    }
-  }
-
-  // look in tsconfig.app.json?
-  config = _read(path.resolve('./tsconfig.app.json'));
-
-  // look in tsconfig.json?
-  if (!config) {
-    config = _read(path.resolve('./tsconfig.json'));
-  }
-
-  return { configFilePath, config };
 }
