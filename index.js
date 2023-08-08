@@ -112,9 +112,24 @@ prog
       }
     }
 
-    o.name = args.name.toLowerCase();
+    o.name = getName(args.name).trim();
+    o.nameNormalCase = normalCase(o.name);
+    o.nameKebabCase = kebabCase(o.name);
+    o.nameSnakeCase = snakeCase(o.name);
+    o.camelPascal = camelPascal(o.nameKebabCase);
+    o.namePascalCase = PascalCase(o.nameKebabCase);
     o.nameUpper = _capitalize(args.name);
     o.nameUpperCase = args.name.toUpperCase();
+
+    const className =
+      o.name.charAt(o.name.length - 1) === 's'
+        ? o.name.substr(0, o.name.length - 1)
+        : o.name;
+
+    o.nameClassKebabCase = kebabCase(className);
+    o.nameClass = PascalCase(o.nameClassKebabCase);
+    o.nameClassCamelCase = getName(o.nameClassKebabCase);
+    o.nameClassSnakeCase = snakeCase(o.nameClassCamelCase);
 
     // set auth guarding params if applicable?
     if (o.auth && typeof o.auth !== 'string')
@@ -123,9 +138,9 @@ prog
     // make containing folder for the module, if using, or otherwise the package name
     let outPath = path.resolve(o.prefix ? o.prefix : './src');
     if (o.module) {
-      outPath += `/modules/${o.name}`;
+      outPath += `/modules/${o.nameKebabCase}`;
     } else {
-      outPath += o.noSubdir ? '' : `/${o.name}`;
+      outPath += o.noSubdir ? '' : `/${o.nameKebabCase}`;
     }
 
     fs.mkdirSync(outPath, { recursive: true });
@@ -137,15 +152,14 @@ prog
     // SCHEMA ?
     if (o.schema || o.interface || o.crud || o.old) {
       if (!o.schemaClass) {
-        o.schemaClass = o.nameUpper;
-        if (o.schemaClass.charAt(o.schemaClass.length - 1) === 's') {
-          o.schemaClass = o.schemaClass.substr(0, o.schemaClass.length - 1);
-        }
+        o.schemaClass = o.nameClass;
       }
+      o.schemaClassKebabCase = kebabCase(o.schemaClass);
+      o.schemaClass = PascalCase(o.schemaClassKebabCase);
+      o.schemaClassCamelCase = getName(o.schemaClassKebabCase);
+      o.schemaClassSnakeCase = snakeCase(o.schemaClassCamelCase);
 
-      o.schemaClassLower = o.schemaClass.toLowerCase();
-      o.schemaClassUpperCase = o.schemaClass.toUpperCase();
-
+      console.log(o);
       let outPathSchema = outPath;
       if (o.schemaDir) {
         outPathSchema += '/' + o.schemaDir;
@@ -157,39 +171,22 @@ prog
 
       fs.mkdirSync(outPathSchema, { recursive: true });
 
-      o.schemaFileName = _getFileName(o.schemaClass, 'schema', o.casing);
+      o.schemaFileName = _getFileName(o.nameKebabCase, 'schema', o.casing);
       let outFile = `${outPathSchema}/${o.schemaFileName}.ts`;
       stagedFiles.push({ type: 'schema', outFile });
     }
 
     // INTERFACE ?
     if (o.old || o.interface) {
-      if (!o.interfaceClass) {
-        o.interfaceClass = o.nameUpper;
-        if (o.interfaceClass.charAt(o.interfaceClass.length - 1) === 's') {
-          o.interfaceClass = o.interfaceClass.substr(
-            0,
-            o.interfaceClass.length - 1,
-          );
-        }
-      }
-
-      o.interfaceClassLower = o.interfaceClass.toLowerCase();
-      o.interfaceClassUpperCase = o.interfaceClass.toUpperCase();
-
       let outPathSchema = outPath;
-      if (o.interfaceDir) {
-        outPathSchema += '/' + o.interfaceDir;
-        o.interfaceDir = _ensureTrailingSlash(o.interfaceDir);
-      } else {
-        outPathSchema += '/interfaces';
-        o.interfaceDir = _ensureTrailingSlash('interfaces');
-      }
+
+      outPathSchema += '/interfaces';
+      o.interfaceDir = _ensureTrailingSlash('interfaces');
 
       fs.mkdirSync(outPathSchema, { recursive: true });
 
       o.interfaceFileName = _getFileName(
-        o.interfaceClass,
+        o.nameKebabCase,
         'interface',
         o.casing,
       );
@@ -199,56 +196,35 @@ prog
 
     // DTO ?
     if (o.dto) {
-      if (!o.dtoClass) {
-        o.dtoClass = o.nameUpper;
-        if (o.dtoClass.charAt(o.dtoClass.length - 1) === 's') {
-          o.dtoClass = o.dtoClass.substr(
-            0,
-            o.dtoClass.length - 1,
-          );
-        }
-      }
-
-      o.dtoClassLower = o.dtoClass.toLowerCase();
-      o.dtoClassUpperCase = o.dtoClass.toUpperCase();
-
       let outPathSchema = outPath;
-      if (o.dtoDir) {
-        outPathSchema += '/' + o.dtoDir;
-        o.dtoDir = _ensureTrailingSlash(o.dtoDir);
-      } else {
-        outPathSchema += '/dto';
-        o.dtoDir = _ensureTrailingSlash('dto');
-      }
+
+      outPathSchema += '/dto';
+      o.dtoDir = _ensureTrailingSlash('dto');
 
       fs.mkdirSync(outPathSchema, { recursive: true });
 
-      o.dtoFileName = _getFileName(
-        o.dtoClass,
-        'dto',
-        o.casing,
-      );
+      o.dtoFileName = _getFileName(o.nameKebabCase, 'dto', o.casing);
       let outFile = `${outPathSchema}/${o.dtoFileName}.ts`;
       stagedFiles.push({ type: 'dto', outFile });
     }
 
     // MODULE ?
     if (o.module) {
-      o.moduleFileName = _getFileName(o.name, 'module', o.casing);
+      o.moduleFileName = _getFileName(o.nameKebabCase, 'module', o.casing);
       let outFile = `${outPath}/${o.moduleFileName}.ts`;
       stagedFiles.push({ type: 'module', outFile });
     }
 
     // CONTROLLER ?
     if (o.controller || o.crud) {
-      o.controllerFileName = _getFileName(o.name, 'controller', o.casing);
+      o.controllerFileName = _getFileName(o.nameKebabCase, 'controller', o.casing);
       let outFile = `${outPath}/${o.controllerFileName}.ts`;
       stagedFiles.push({ type: 'controller', outFile });
     }
 
     // SERVICE ?
     if (o.service) {
-      o.serviceFileName = _getFileName(o.name, 'service', o.casing);
+      o.serviceFileName = _getFileName(o.nameKebabCase, 'service', o.casing);
       let outFile = `${outPath}/${o.serviceFileName}.ts`;
       stagedFiles.push({ type: 'service', outFile });
     }
@@ -263,8 +239,16 @@ prog.parse(process.argv);
 
 // Utils ------------------------
 
+function getName(str) {
+  return str.includes('-')
+    ? ((a = camelize(str)), a.charAt(0).toLowerCase() + a.slice(1))
+    : str.toLowerCase();
+}
+
 function _capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+  return str.includes('-')
+    ? camelize(str)
+    : str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function _getFileName(className, type, casing) {
@@ -278,4 +262,33 @@ function _getFileName(className, type, casing) {
 
 function _ensureTrailingSlash(str) {
   return str.charAt(str.length - 1) !== '/' ? str + '/' : str;
+}
+
+function camelize(str) {
+  return str.replace(/-./g, (x) => x[1].toUpperCase());
+}
+
+function kebabCase(str) {
+  return str.replace(/([a-z0–9])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+function normalCase(str) {
+  return str.replace(/([a-z0–9])([A-Z])/g, '$1 $2').toLowerCase();
+}
+
+function snakeCase(str) {
+  return str.replace(/([a-z0–9])([A-Z])/g, '$1_$2').toUpperCase();
+}
+
+function camelPascal(str) {
+  return (
+    (a = str.replace(/-./g, (x) => '-' + x[1].toUpperCase())),
+    a.charAt(0).toUpperCase() + a.slice(1)
+  );
+}
+
+function PascalCase(str) {
+  return str.includes('-')
+    ? ((a = camelize(str)), a.charAt(0).toUpperCase() + a.slice(1))
+    : ((a = str.toLowerCase()), a.charAt(0).toUpperCase() + a.slice(1));
 }

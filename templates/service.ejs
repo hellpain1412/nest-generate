@@ -2,40 +2,40 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 <% if (old && schema) { %>
-import { <%= schemaClass %>Document } from './interfaces/<%= name %>.interface';
-import { <%= schemaClassUpperCase %>_MODEL } from './schemas/<%= name %>.schema';<% } else if (!old && schema) { %>
-import { <%= schemaClass %>, <%= schemaClass %>Document } from './schemas/<%= name %>.schema';<% } %>
-<% if (crud) { %>import { Create<%= nameUpper %>Dto, Update<%= nameUpper %>Dto } from './dto/<%= name %>.dto';
+import { <%= schemaClass %>Document } from './interfaces/<%= interfaceFileName %>';
+import { <%= schemaClassSnakeCase %>_MODEL } from './schemas/<%= schemaFileName %>';<% } else if (!old && schema) { %>
+import { <%= schemaClass %>, <%= schemaClass %>Document } from './schemas/<%= schemaFileName %>';<% } %>
+<% if (crud) { %>import { Create<%= nameClass %>Dto, Update<%= nameClass %>Dto } from './dto/<%= dtoFileName %>';
 <% } -%>
 
 @Injectable()
-export class <%= nameUpper %>Service {
+export class <%= nameClass %>Service {
   constructor(<% if (old && schema) { %>
-    @InjectModel(<%= schemaClassUpperCase %>_MODEL)
+    @InjectModel(<%= schemaClassSnakeCase %>_MODEL)
     private readonly <%= schemaClass %>Model: Model<<%= schemaClass %>Document>,<% } else if (!old && schema) { %>
     @InjectModel(<%= schemaClass %>.name)
     private readonly <%= schemaClass %>Model: Model<<%= schemaClass %>Document>,<% } %>
   ) {}
 <% if (crud) { 
   %>
-  async create(create<%= nameUpper %>Dto: Create<%= nameUpper %>Dto) {
-    return 'This action adds a new <%= name %>';
+  async create(create<%= nameClass %>Dto: Create<%= nameClass %>Dto) {
+    return 'This action adds a new <%= nameNormalCase %>.';
   }
 
   async findAll() {
-    return `This action returns all <%= name %>`;
+    return `This action returns all <%= nameNormalCase %>.`;
   }
 
   async findOne(id: string) {
-    return `This action returns a #${id} <%= name %>`;
+    return `This action returns a #${id} <%= nameNormalCase %>.`;
   }
 
-  async update(id: string, update<%= nameUpper %>Dto: Update<%= nameUpper %>Dto) {
-    return `This action updates a #${id} <%= name %>`;
+  async update(id: string, update<%= nameClass %>Dto: Update<%= nameClass %>Dto) {
+    return `This action updates a #${id} <%= nameNormalCase %>.`;
   }
 
   async remove(id: string) {
-    return `This action removes a #${id} <%= name %>`;
+    return `This action removes a #${id} <%= nameNormalCase %>.`;
   }
 <% } -%>
 }

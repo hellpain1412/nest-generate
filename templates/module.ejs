@@ -1,21 +1,21 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-<% if (controller) { %>import { <%= nameUpper %>Controller } from './<%= controllerFileName %>';<% } 
+<% if (controller) { %>import { <%= nameClass %>Controller } from './<%= controllerFileName %>';<% } 
 %><% if (service) { %>
-import { <%= nameUpper %>Service } from './<%= serviceFileName %>';<% } 
+import { <%= nameClass %>Service } from './<%= serviceFileName %>';<% } 
 %>
-import { <% if (old) { %><%= nameUpperCase %>_MODEL<% } else { %><%= nameUpper %><% } -%>, <%= nameUpper %>Schema } from './schemas/<%= name %>.schema';
+import { <% if (old) { %><%= schemaClassSnakeCase %>_MODEL<% } else { %><%= schemaClass %><% } -%>, <%= schemaClass %>Schema } from './schemas/<%= schemaFileName %>';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       {
-        name: <% if (old) { %><%= nameUpperCase %>_MODEL<% } else { %><%= nameUpper %>.name<% } -%>,
-        schema: <%= nameUpper %>Schema,
+        name: <% if (old) { %><%= schemaClassSnakeCase %>_MODEL<% } else { %><%= schemaClass %>.name<% } -%>,
+        schema: <%= schemaClass %>Schema,
       },
     ]),
   ],
-  controllers: [<% if (controller) { %><%= nameUpper %>Controller<% } -%>],
-  providers: [<% if (service) { %><%= nameUpper %>Service<% } -%>],
+  controllers: [<% if (controller) { %><%= nameClass %>Controller<% } -%>],
+  providers: [<% if (service) { %><%= nameClass %>Service<% } -%>],
 })
-export class <%= nameUpper %>Module {}
+export class <%= nameClass %>Module {}

@@ -6,64 +6,63 @@ import {
   Patch,
   Param,
   Delete,
-  <% if (auth) { %>UseGuards,
-<% } -%>
+  <% if (auth) { %>UseGuards,<% } -%>
 <% } -%>
   Controller,
 } from '@nestjs/common';
 import {<% if (crud) { %> ApiBearerAuth, ApiOperation,<% } -%> ApiTags } from '@nestjs/swagger';
-<% if (service) { %>import { <%= nameUpper %>Service } from './<%= serviceFileName %>';
+<% if (service) { %>import { <%= nameClass %>Service } from './<%= serviceFileName %>';
 <% } -%>
-<% if (crud) { %>import { Create<%= nameUpper %>Dto, <%= nameUpper %>ParamDto, Update<%= nameUpper %>Dto } from './dto/<%= name %>.dto';
+<% if (crud) { %>import { Create<%= nameClass %>Dto, <%= nameClass %>ParamDto, Update<%= nameClass %>Dto } from './dto/<%= dtoFileName %>';
 <% } -%>
 
-@ApiTags('<%= nameUpper %>')
-@Controller('<%= name %>')
-export class <%= nameUpper %>Controller {
-  constructor(private readonly <%= name %>Service: <%= nameUpper %>Service) {}
+@ApiTags('<%= camelPascal %>')
+@Controller('<%= nameKebabCase %>')
+export class <%= nameClass %>Controller {
+  constructor(private readonly <%= nameClassCamelCase %>Service: <%= nameClass %>Service) {}
 <% if (crud) { 
   %>
   @ApiBearerAuth()
   <% if (auth) { %>@UseGuards(<%= auth %>)
-  <% } -%>@ApiOperation({ summary: 'Create <%= name %>' })
+  <% } -%>@ApiOperation({ summary: 'Create <%= nameNormalCase %>.' })
   @Post()
-  create(@Body() create<%= nameUpper %>Dto: Create<%= nameUpper %>Dto) {
-    return this.<%= name %>Service.create(create<%= nameUpper %>Dto);
+  async create(@Body() create<%= nameClass %>Dto: Create<%= nameClass %>Dto) {
+    return this.<%= nameClassCamelCase %>Service.create(create<%= nameClass %>Dto);
   }
 
   @ApiBearerAuth()
   <% if (auth) { %>@UseGuards(<%= auth %>)
-  <% } -%>@ApiOperation({ summary: 'Get all <%= name %>' })
+  <% } -%>@ApiOperation({ summary: 'Get all <%= nameNormalCase %>.' })
   @Get()
-  findAll() {
-    return this.<%= name %>Service.findAll();
+  async findAll() {
+    return this.<%= nameClassCamelCase %>Service.findAll();
   }
 
   @ApiBearerAuth()
   <% if (auth) { %>@UseGuards(<%= auth %>)
-  <% } -%>@ApiOperation({ summary: 'Get <%= name %> by Id' })
+  <% } -%>@ApiOperation({ summary: 'Get <%= nameNormalCase %> by id.' })
   @Get(':id')
-  findOne(@Param('id') { id }: <%= nameUpper %>ParamDto) {
-    return this.<%= name %>Service.findOne(id);
+  async findOne(@Param('id') { id }: <%= nameClass %>ParamDto) {
+    return this.<%= nameClassCamelCase %>Service.findOne(id);
   }
 
   @ApiBearerAuth()
   <% if (auth) { %>@UseGuards(<%= auth %>) 
-  <% } -%>@ApiOperation({ summary: 'Update <%= name %> by Id' })
+  <% } -%>@ApiOperation({ summary: 'Update <%= nameNormalCase %> by id.' })
   @Patch(':id')
-  update(
-    @Param('id') { id }: <%= nameUpper %>ParamDto,
-    @Body() update<%= nameUpper %>Dto: Update<%= nameUpper %>Dto,
+  async update(
+    @Param('id') { id }: <%= nameClass %>ParamDto,
+    @Body() update<%= nameClass %>Dto: Update<%= nameClass %>Dto,
   ) {
-    return this.<%= name %>Service.update(id, update<%= nameUpper %>Dto);
+    return this.<%= nameClassCamelCase %>Service.update(id, update<%= nameClass %>Dto);
   }
 
   @ApiBearerAuth()
   <% if (auth) { %>@UseGuards(<%= auth %>)
-  <% } -%>@ApiOperation({ summary: 'Delete <%= name %> by Id' })
+  <% } -%>@ApiOperation({ summary: 'Delete <%= nameNormalCase %> by id.' })
   @Delete(':id')
-  remove(@Param('id') { id }: <%= nameUpper %>ParamDto) {
-    return this.<%= name %>Service.remove(id);
+  async remove(@Param('id') { id }: <%= nameClass %>ParamDto) {
+    return this.<%= nameClassCamelCase %>Service.remove(id);
   }
 <% } -%>
 }

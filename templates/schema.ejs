@@ -2,17 +2,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-const <%= schemaClassUpperCase %>_MODEL = '<%= schemaClassLower %>s';
+const <%= schemaClassSnakeCase %>_MODEL = '<%= schemaClassKebabCase %>s';
 
 export type <%= schemaClass %>Document = HydratedDocument<<%= schemaClass %>>;
 
-@Schema({ timestamps: true, collection: <%= schemaClassUpperCase %>_MODEL })
+@Schema({ timestamps: true, collection: <%= schemaClassSnakeCase %>_MODEL })
 export class <%= schemaClass %> {
   @Prop({
     required: true,
     trim: true,
   })
-  <%= schemaClassLower %>: string;
+  example_1: string;
 
   @Prop({ default: null })
   deleteAt: Date;
@@ -28,7 +28,7 @@ export const <%= schemaClass %>Schema = SchemaFactory.createForClass(<%= schemaC
 <% } %><% if (old) { -%>
 import * as mongoose from 'mongoose';
 
-const <%= schemaClassUpperCase %>_MODEL = '<%= schemaClassLower %>s';
+const <%= schemaClassSnakeCase %>_MODEL = '<%= schemaClassKebabCase %>s';
 
 const <%= schemaClass %>Schema = new mongoose.Schema(
   {
@@ -41,9 +41,9 @@ const <%= schemaClass %>Schema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    collection: <%= schemaClassUpperCase %>_MODEL,
+    collection: <%= schemaClassSnakeCase %>_MODEL,
   },
 );
 
-export { <%= schemaClassUpperCase %>_MODEL, <%= schemaClass %>Schema };
+export { <%= schemaClassSnakeCase %>_MODEL, <%= schemaClass %>Schema };
 <% } %>

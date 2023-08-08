@@ -2,7 +2,7 @@ import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { IsNotEmpty, IsMongoId } from 'class-validator';
 
-export class Create<%= dtoClass %>Dto {
+export class Create<%= nameClass %>Dto {
   @ApiProperty({
     example: 'example_1',
   })
@@ -14,11 +14,11 @@ export class Create<%= dtoClass %>Dto {
   example_2: number;
 }
 
-export class Update<%= dtoClass %>Dto extends PartialType(
-  OmitType(Create<%= dtoClass %>Dto, ['example_1'] as const),
+export class Update<%= nameClass %>Dto extends PartialType(
+  OmitType(Create<%= nameClass %>Dto, ['example_1'] as const),
 ) {}
 
-export class <%= dtoClass %>ParamDto {
+export class <%= nameClass %>ParamDto {
   @ApiProperty({
     example: 'id',
   })
