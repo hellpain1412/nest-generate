@@ -159,7 +159,6 @@ prog
       o.schemaClassCamelCase = getName(o.schemaClassKebabCase);
       o.schemaClassSnakeCase = snakeCase(o.schemaClassCamelCase);
 
-      console.log(o);
       let outPathSchema = outPath;
       if (o.schemaDir) {
         outPathSchema += '/' + o.schemaDir;
