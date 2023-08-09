@@ -2,7 +2,7 @@
 
    USAGE 
 
-     index.js <name>
+     npx nest-generate <OPTIONS> <name>
 
    ARGUMENTS
 
