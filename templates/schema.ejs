@@ -2,7 +2,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-const <%= schemaClassSnakeCase %>_MODEL = '<%= schemaClassKebabCase %>s';
+export const <%= schemaClassSnakeCase %>_MODEL = '<%= schemaClassKebabCase %>s';
 
 export type <%= schemaClass %>Document = HydratedDocument<<%= schemaClass %>>;
 
@@ -28,7 +28,7 @@ export const <%= schemaClass %>Schema = SchemaFactory.createForClass(<%= schemaC
 <% } %><% if (old) { -%>
 import * as mongoose from 'mongoose';
 
-const <%= schemaClassSnakeCase %>_MODEL = '<%= schemaClassKebabCase %>s';
+export const <%= schemaClassSnakeCase %>_MODEL = '<%= schemaClassKebabCase %>s';
 
 const <%= schemaClass %>Schema = new mongoose.Schema(
   {

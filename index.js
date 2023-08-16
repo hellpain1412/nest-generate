@@ -101,8 +101,13 @@ prog
     if (o.c || o.controller) {
       o.controller = true;
     }
+
     if (o.s || o.service) {
       o.service = true;
+    }
+
+    if (o.d || o.dto) {
+      o.dto = true;
     }
 
     if (o.all) {
@@ -216,7 +221,11 @@ prog
 
     // CONTROLLER ?
     if (o.controller || o.crud) {
-      o.controllerFileName = _getFileName(o.nameKebabCase, 'controller', o.casing);
+      o.controllerFileName = _getFileName(
+        o.nameKebabCase,
+        'controller',
+        o.casing,
+      );
       let outFile = `${outPath}/${o.controllerFileName}.ts`;
       stagedFiles.push({ type: 'controller', outFile });
     }

@@ -26,43 +26,43 @@ export class <%= nameClass %>Controller {
   <% if (auth) { %>@UseGuards(<%= auth %>)
   <% } -%>@ApiOperation({ summary: 'Create <%= nameNormalCase %>.' })
   @Post()
-  async create(@Body() create<%= nameClass %>Dto: Create<%= nameClass %>Dto) {
-    return this.<%= nameClassCamelCase %>Service.create(create<%= nameClass %>Dto);
+  async create<%= nameClass %>(@Body() create<%= nameClass %>Dto: Create<%= nameClass %>Dto) {
+    return this.<%= nameClassCamelCase %>Service.create<%= nameClass %>(create<%= nameClass %>Dto);
   }
 
   @ApiBearerAuth()
   <% if (auth) { %>@UseGuards(<%= auth %>)
   <% } -%>@ApiOperation({ summary: 'Get all <%= nameNormalCase %>.' })
   @Get()
-  async findAll() {
-    return this.<%= nameClassCamelCase %>Service.findAll();
+  async getAll<%= nameClass %>() {
+    return this.<%= nameClassCamelCase %>Service.getAll<%= nameClass %>();
   }
 
   @ApiBearerAuth()
   <% if (auth) { %>@UseGuards(<%= auth %>)
   <% } -%>@ApiOperation({ summary: 'Get <%= nameNormalCase %> by id.' })
   @Get(':id')
-  async findOne(@Param('id') { id }: <%= nameClass %>ParamDto) {
-    return this.<%= nameClassCamelCase %>Service.findOne(id);
+  async get<%= nameClass %>ById(@Param('id') { id }: <%= nameClass %>ParamDto) {
+    return this.<%= nameClassCamelCase %>Service.get<%= nameClass %>ById(id);
   }
 
   @ApiBearerAuth()
   <% if (auth) { %>@UseGuards(<%= auth %>) 
   <% } -%>@ApiOperation({ summary: 'Update <%= nameNormalCase %> by id.' })
   @Patch(':id')
-  async update(
+  async update<%= nameClass %>(
     @Param('id') { id }: <%= nameClass %>ParamDto,
     @Body() update<%= nameClass %>Dto: Update<%= nameClass %>Dto,
   ) {
-    return this.<%= nameClassCamelCase %>Service.update(id, update<%= nameClass %>Dto);
+    return this.<%= nameClassCamelCase %>Service.update<%= nameClass %>(id, update<%= nameClass %>Dto);
   }
 
   @ApiBearerAuth()
   <% if (auth) { %>@UseGuards(<%= auth %>)
   <% } -%>@ApiOperation({ summary: 'Delete <%= nameNormalCase %> by id.' })
   @Delete(':id')
-  async remove(@Param('id') { id }: <%= nameClass %>ParamDto) {
-    return this.<%= nameClassCamelCase %>Service.remove(id);
+  async remove<%= nameClass %>(@Param('id') { id }: <%= nameClass %>ParamDto) {
+    return this.<%= nameClassCamelCase %>Service.remove<%= nameClass %>(id);
   }
 <% } -%>
 }
