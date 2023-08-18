@@ -41,28 +41,28 @@ export class <%= nameClass %>Controller {
   @ApiBearerAuth()
   <% if (auth) { %>@UseGuards(<%= auth %>)
   <% } -%>@ApiOperation({ summary: 'Get <%= nameNormalCase %> by id.' })
-  @Get(':id')
-  async get<%= nameClass %>ById(@Param('id') { id }: <%= nameClass %>ParamDto) {
-    return this.<%= nameClassCamelCase %>Service.get<%= nameClass %>ById(id);
+  @Get(':<%= nameClassCamelCase %>Id')
+  async get<%= nameClass %>ById(@Param() { <%= nameClassCamelCase %>Id }: <%= nameClass %>ParamDto) {
+    return this.<%= nameClassCamelCase %>Service.get<%= nameClass %>ById(<%= nameClassCamelCase %>Id);
   }
 
   @ApiBearerAuth()
   <% if (auth) { %>@UseGuards(<%= auth %>) 
   <% } -%>@ApiOperation({ summary: 'Update <%= nameNormalCase %> by id.' })
-  @Patch(':id')
+  @Patch(':<%= nameClassCamelCase %>Id')
   async update<%= nameClass %>(
-    @Param('id') { id }: <%= nameClass %>ParamDto,
+    @Param() { <%= nameClassCamelCase %>Id }: <%= nameClass %>ParamDto,
     @Body() update<%= nameClass %>Dto: Update<%= nameClass %>Dto,
   ) {
-    return this.<%= nameClassCamelCase %>Service.update<%= nameClass %>(id, update<%= nameClass %>Dto);
+    return this.<%= nameClassCamelCase %>Service.update<%= nameClass %>(<%= nameClassCamelCase %>Id, update<%= nameClass %>Dto);
   }
 
   @ApiBearerAuth()
   <% if (auth) { %>@UseGuards(<%= auth %>)
   <% } -%>@ApiOperation({ summary: 'Delete <%= nameNormalCase %> by id.' })
-  @Delete(':id')
-  async remove<%= nameClass %>(@Param('id') { id }: <%= nameClass %>ParamDto) {
-    return this.<%= nameClassCamelCase %>Service.remove<%= nameClass %>(id);
+  @Delete(':<%= nameClassCamelCase %>Id')
+  async remove<%= nameClass %>(@Param() { <%= nameClassCamelCase %>Id }: <%= nameClass %>ParamDto) {
+    return this.<%= nameClassCamelCase %>Service.remove<%= nameClass %>(<%= nameClassCamelCase %>Id);
   }
 <% } -%>
 }

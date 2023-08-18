@@ -28,7 +28,7 @@ export const <%= schemaClass %>Schema = SchemaFactory.createForClass(<%= schemaC
 <% } %><% if (old) { -%>
 import * as mongoose from 'mongoose';
 
-export const <%= schemaClassSnakeCase %>_MODEL = '<%= schemaClassKebabCase %>s';
+const <%= schemaClassSnakeCase %>_MODEL = '<%= schemaClassKebabCase %>s';
 
 const <%= schemaClass %>Schema = new mongoose.Schema(
   {

@@ -26,16 +26,16 @@ export class <%= nameClass %>Service {
     return `This action returns all <%= nameNormalCase %>.`;
   }
 
-  async get<%= nameClass %>ById(id: string) {
-    return `This action returns a #${id} <%= nameNormalCase %>.`;
+  async get<%= nameClass %>ById(<%= nameClassCamelCase %>Id: string) {
+    return `This action returns a #${<%= nameClassCamelCase %>Id} <%= nameNormalCase %>.`;
   }
 
-  async update<%= nameClass %>(id: string, update<%= nameClass %>Dto: Update<%= nameClass %>Dto) {
-    return `This action updates a #${id} <%= nameNormalCase %>.`;
+  async update<%= nameClass %>(<%= nameClassCamelCase %>Id: string, update<%= nameClass %>Dto: Update<%= nameClass %>Dto) {
+    return `This action updates a #${<%= nameClassCamelCase %>Id} <%= nameNormalCase %>.`;
   }
 
-  async remove<%= nameClass %>(id: string) {
-    return `This action removes a #${id} <%= nameNormalCase %>.`;
+  async remove<%= nameClass %>(<%= nameClassCamelCase %>Id: string) {
+    return `This action removes a #${<%= nameClassCamelCase %>Id} <%= nameNormalCase %>.`;
   }
 <% } -%>
 }
