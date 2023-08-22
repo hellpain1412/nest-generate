@@ -26,8 +26,8 @@ export class <%= nameClass %>Controller {
   <% if (auth) { %>@UseGuards(<%= auth %>)
   <% } -%>@ApiOperation({ summary: 'Create <%= nameNormalCase %>.' })
   @Post()
-  async create<%= nameClass %>(@Body() create<%= nameClass %>Dto: Create<%= nameClass %>Dto) {
-    return this.<%= nameClassCamelCase %>Service.create<%= nameClass %>(create<%= nameClass %>Dto);
+  async create<%= nameClass %>(@Body() create<%= nameClass %>Input: Create<%= nameClass %>Dto) {
+    return this.<%= nameClassCamelCase %>Service.create<%= nameClass %>(create<%= nameClass %>Input);
   }
 
   @ApiBearerAuth()
@@ -52,9 +52,9 @@ export class <%= nameClass %>Controller {
   @Patch(':<%= nameClassCamelCase %>Id')
   async update<%= nameClass %>(
     @Param() { <%= nameClassCamelCase %>Id }: <%= nameClass %>ParamDto,
-    @Body() update<%= nameClass %>Dto: Update<%= nameClass %>Dto,
+    @Body() update<%= nameClass %>Input: Update<%= nameClass %>Dto,
   ) {
-    return this.<%= nameClassCamelCase %>Service.update<%= nameClass %>(<%= nameClassCamelCase %>Id, update<%= nameClass %>Dto);
+    return this.<%= nameClassCamelCase %>Service.update<%= nameClass %>(<%= nameClassCamelCase %>Id, update<%= nameClass %>Input);
   }
 
   @ApiBearerAuth()
