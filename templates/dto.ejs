@@ -15,17 +15,17 @@ export class Create<%= nameClass %>Dto {
 }
 
 export class Update<%= nameClass %>Dto extends PartialType(
-  OmitType(Create<%= nameClass %>Dto, ['example_1'] as const),
+  OmitType(Create<%= nameClass %>Dto, [] as const),
 ) {}
 
 export class <%= nameClass %>ParamDto {
   @ApiProperty({
-    example: 'id',
+    example: '<%= nameClassCamelCase %>Id',
   })
   @IsMongoId()
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) =>
     typeof value === 'string' || value instanceof String ? value.trim() : value,
   )
-  readonly id: string;
+  readonly <%= nameClassCamelCase %>Id: string;
 }
